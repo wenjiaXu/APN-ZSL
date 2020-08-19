@@ -1,4 +1,4 @@
-# * Attribute Prototype Network for Zero-Shot Learning*
+# Attribute Prototype Network for Zero-Shot Learning
 
 The current project page provides [pytorch](http://pytorch.org/) code that implements the following paper:   
 **Title:**      "Attribute Prototype Network for Zero-Shot Learning"    
