@@ -1,7 +1,5 @@
 # Attribute Prototype Network for Zero-Shot Learning
 
-🆕✅🎉 _updated code: 18th October 2020: APN Image features for CUB, AWA2, SUN that can boost the performance of Generative models.
-
 The current project page provides [pytorch](http://pytorch.org/) code that implements the following paper:   
 **Title:**      "Attribute Prototype Network for Zero-Shot Learning"    
 **Authors:**     Wenjia Xu, Yongqin Xian, Jiuniu Wang, Bernt Schiele, Zeynep Akata    
