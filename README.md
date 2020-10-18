@@ -11,10 +11,13 @@ To this end, we propose a novel zero-shot representation learning framework that
 
 ## Requirements
 Python = 3.6
+
 PyTorch = 1.0
+
 CUDA
+
 Numpy
-...
+
 
 ## APN image features for CUB, AWA2, SUN that can boost performance of other generative models.
 
