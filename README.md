@@ -13,7 +13,7 @@ To this end, we propose a novel zero-shot representation learning framework that
 ## Requirements
 Python 3.7.7
 
-PyTorch = 1.8.1+cu102
+PyTorch = 1.8.1
 
 All experiments are performed with one Quadro RTX 8000 GPU.
 
@@ -22,9 +22,9 @@ All experiments are performed with one Quadro RTX 8000 GPU.
 
 - Dataset: please download the dataset, i.e., [CUB](http://www.vision.caltech.edu/visipedia/CUB-200-2011.html), [AWA2](https://cvml.ist.ac.at/AwA2/), [SUN](https://groups.csail.mit.edu/vision/SUN/hierarchy.html), and change the opt.image_root to the dataset root path on your machine
   
-- Data split and APN image features: please download the [data](https://drive.google.com/file/d/12ZsOxlkKU0IfXEfhB8NHRvHzfGFdwlhB/view?usp=sharing) folder and place it in ./data/.
+- Data split and APN image features: please download the [data](https://drive.google.com/file/d/12ZsOxlkKU0IfXEfhB8NHRvHzfGFdwlhB/view?usp=sharing) folder and place it in *./data/*.
 
-- Pre-trained models: please download the [pre-trained models](https://drive.google.com/file/d/1c5scuU0kZS5a9Rz3kf5T0UweCvOpGsh2/view?usp=sharing) and place it in ./pretrained_models/.
+- Pre-trained models: please download the [pre-trained models](https://drive.google.com/file/d/1c5scuU0kZS5a9Rz3kf5T0UweCvOpGsh2/view?usp=sharing) and place it in *./pretrained_models/*.
 
 ## Code Structures
 There are four parts in the code.
@@ -32,7 +32,7 @@ There are four parts in the code.
  - `data`: The dataset split, as well as the APN feature extracted from our APN model.
  - `ABP`: The code from [ZSL_ABP](https://github.com/EthanZhu90/ZSL_ABP), we can reproduce the results of applying our APN feature on ABP model reported in the paper.
  - `pretrained_models`: The pretrained models.
- - `script`: The training scripts for APN, e.g., ./script/CUB_ZSL.sh, etc. The training scripts for APN+ABP, i.e., ./script/AWA2_APN_ABP.sh, etc.
+ - `script`: The training scripts for APN, e.g., *./script/SUN_ZSL.sh*, etc. The training scripts for APN+ABP, i.e., *./script/SUN_APN_ABP.sh*, etc.
 
 If you use any content of this repo for your work, please cite the following bib entry:
 
