@@ -22,9 +22,9 @@ All experiments are performed with one Quadro RTX 8000 GPU.
 
 - Dataset: please download the dataset, i.e., [CUB](http://www.vision.caltech.edu/visipedia/CUB-200-2011.html), [AWA2](https://cvml.ist.ac.at/AwA2/), [SUN](https://groups.csail.mit.edu/vision/SUN/hierarchy.html), and change the opt.image_root to the dataset root path on your machine
   
-- Data split and APN image features: please download the [data]() folder and place it in ./data/.
+- Data split and APN image features: please download the [data](https://drive.google.com/file/d/12ZsOxlkKU0IfXEfhB8NHRvHzfGFdwlhB/view?usp=sharing) folder and place it in ./data/.
 
-- Pre-trained models: please download the [pre-trained models](https://drive.google.com/open?id=14Jn1t9JxH-CxjfWy4JmVpCxkC9cDqqfE) and place it in ./pretrained_models/.
+- Pre-trained models: please download the [pre-trained models](https://drive.google.com/file/d/1c5scuU0kZS5a9Rz3kf5T0UweCvOpGsh2/view?usp=sharing) and place it in ./pretrained_models/.
 
 ## Code Structures
 There are four parts in the code.
