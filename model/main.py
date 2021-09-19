@@ -118,70 +118,106 @@ def main():
     result_zsl = Result()
     result_gzsl = Result()
 
-    print('Train and test...')
-    for epoch in range(opt.nepoch):
-        # print("training")
-        model.train()
-        current_lr = opt.classifier_lr * (0.8 ** (epoch // 10))
-        realtrain = epoch > opt.pretrain_epoch
-        if epoch <= opt.pretrain_epoch:   # pretrain ALE for the first several epoches
-            optimizer = optim.Adam(params=[model.prototype_vectors[layer_name], model.ALE_vector],
-                                   lr=opt.pretrain_lr, betas=(opt.beta1, 0.999))
+
+    if opt.only_evaluate:
+        print('Evaluate ...')
+        model.load_state_dict(torch.load(opt.resume))
+        model.eval()
+        # test zsl
+        if not opt.gzsl:
+            acc_ZSL = test_zsl(opt, model, testloader_unseen, attribute_zsl, data.unseenclasses)
+            print('ZSL test accuracy is {:.1f}%'.format(acc_ZSL))
         else:
-            optimizer = optim.Adam(params=filter(lambda p: p.requires_grad, model.parameters()),
-                                   lr=current_lr, betas=(opt.beta1, 0.999))
-        # loss for print
-        loss_log = {'ave_loss': 0, 'l_xe_final': 0, 'l_attri_final': 0, 'l_regular_final': 0,
-                    'l_xe_layer': 0, 'l_attri_layer': 0, 'l_regular_layer': 0, 'l_cpt': 0}
+            # test gzsl
+            acc_GZSL_unseen = test_gzsl(opt, model, testloader_unseen, attribute_gzsl, data.unseenclasses)
+            acc_GZSL_seen = test_gzsl(opt, model, testloader_seen, attribute_gzsl, data.seenclasses)
 
-        batch = len(trainloader)
-        for i, (batch_input, batch_target, impath) in enumerate(trainloader):
-            model.zero_grad()
-            # map target labels
-            batch_target = visual_utils.map_label(batch_target, data.seenclasses)
-            input_v = Variable(batch_input)
-            label_v = Variable(batch_target)
-            if opt.cuda:
-                input_v = input_v.cuda()
-                label_v = label_v.cuda()
-            output, pre_attri, attention, pre_class = model(input_v, attribute_seen)
-            label_a = attribute_seen[:, label_v].t()
-
-            loss = Loss_fn(opt, loss_log, reg_weight, criterion, criterion_regre, model,
-                           output, pre_attri, attention, pre_class, label_a, label_v,
-                           realtrain, middle_graph, parts, group_dic, sub_group_dic)
-            loss_log['ave_loss'] += loss.item()
-            loss.backward()
-            optimizer.step()
-        # print('\nLoss log: {}'.format({key: loss_log[key] / batch for key in loss_log}))
-        print('\n[Epoch %d, Batch %5d] Train loss: %.3f '
-              % (epoch+1, batch, loss_log['ave_loss'] / batch))
-
-        if (i + 1) == batch or (i + 1) % 200 == 0:
-            ###### test #######
-            # print("testing")
-            model.eval()
-            # test zsl
-            if not opt.gzsl:
-                acc_ZSL = test_zsl(opt, model, testloader_unseen, attribute_zsl, data.unseenclasses)
-                result_zsl.update(epoch+1, acc_ZSL)
-                print('\n[Epoch {}] ZSL test accuracy is {:.1f}%, Best_acc [{:.1f}% | Epoch-{}]'.format(epoch+1, acc_ZSL, result_zsl.best_acc, result_zsl.best_iter))
+            if (acc_GZSL_unseen + acc_GZSL_seen) == 0:
+                acc_GZSL_H = 0
             else:
-                # test gzsl
-                acc_GZSL_unseen = test_gzsl(opt, model, testloader_unseen, attribute_gzsl, data.unseenclasses)
-                acc_GZSL_seen = test_gzsl(opt, model, testloader_seen, attribute_gzsl, data.seenclasses)
+                acc_GZSL_H = 2 * acc_GZSL_unseen * acc_GZSL_seen / (
+                        acc_GZSL_unseen + acc_GZSL_seen)
 
-                if (acc_GZSL_unseen + acc_GZSL_seen) == 0:
-                    acc_GZSL_H = 0
+            print('GZSL test accuracy is Unseen: {:.1f} Seen: {:.1f} H:{:.1f}'.format(acc_GZSL_unseen, acc_GZSL_seen, acc_GZSL_H))
+    else:
+        print('Train and test...')
+        for epoch in range(opt.nepoch):
+            # print("training")
+            model.train()
+            current_lr = opt.classifier_lr * (0.8 ** (epoch // 10))
+            realtrain = epoch > opt.pretrain_epoch
+            if epoch <= opt.pretrain_epoch:   # pretrain ALE for the first several epoches
+                optimizer = optim.Adam(params=[model.prototype_vectors[layer_name], model.ALE_vector],
+                                       lr=opt.pretrain_lr, betas=(opt.beta1, 0.999))
+            else:
+                optimizer = optim.Adam(params=filter(lambda p: p.requires_grad, model.parameters()),
+                                       lr=current_lr, betas=(opt.beta1, 0.999))
+            # loss for print
+            loss_log = {'ave_loss': 0, 'l_xe_final': 0, 'l_attri_final': 0, 'l_regular_final': 0,
+                        'l_xe_layer': 0, 'l_attri_layer': 0, 'l_regular_layer': 0, 'l_cpt': 0}
+
+            batch = len(trainloader)
+            for i, (batch_input, batch_target, impath) in enumerate(trainloader):
+                model.zero_grad()
+                # map target labels
+                batch_target = visual_utils.map_label(batch_target, data.seenclasses)
+                input_v = Variable(batch_input)
+                label_v = Variable(batch_target)
+                if opt.cuda:
+                    input_v = input_v.cuda()
+                    label_v = label_v.cuda()
+                output, pre_attri, attention, pre_class = model(input_v, attribute_seen)
+                label_a = attribute_seen[:, label_v].t()
+
+                loss = Loss_fn(opt, loss_log, reg_weight, criterion, criterion_regre, model,
+                               output, pre_attri, attention, pre_class, label_a, label_v,
+                               realtrain, middle_graph, parts, group_dic, sub_group_dic)
+                loss_log['ave_loss'] += loss.item()
+                loss.backward()
+                optimizer.step()
+            # print('\nLoss log: {}'.format({key: loss_log[key] / batch for key in loss_log}))
+            print('\n[Epoch %d, Batch %5d] Train loss: %.3f '
+                  % (epoch+1, batch, loss_log['ave_loss'] / batch))
+
+            if (i + 1) == batch or (i + 1) % 200 == 0:
+                ###### test #######
+                # print("testing")
+                model.eval()
+                # test zsl
+                if not opt.gzsl:
+                    acc_ZSL = test_zsl(opt, model, testloader_unseen, attribute_zsl, data.unseenclasses)
+                    if acc_ZSL > result_zsl.best_acc:
+                        # save model state
+                        model_save_path = os.path.join('./out/{}_ZSL_id_{}.pth'.format(opt.dataset, opt.train_id))
+                        torch.save(model.state_dict(), model_save_path)
+                        print('model saved to:', model_save_path)
+                    result_zsl.update(epoch+1, acc_ZSL)
+                    print('\n[Epoch {}] ZSL test accuracy is {:.1f}%, Best_acc [{:.1f}% | Epoch-{}]'.format(epoch+1, acc_ZSL, result_zsl.best_acc, result_zsl.best_iter))
+
                 else:
-                    acc_GZSL_H = 2 * acc_GZSL_unseen * acc_GZSL_seen / (
-                            acc_GZSL_unseen + acc_GZSL_seen)
-                result_gzsl.update_gzsl(epoch+1, acc_GZSL_unseen, acc_GZSL_seen, acc_GZSL_H)
+                    # test gzsl
+                    acc_GZSL_unseen = test_gzsl(opt, model, testloader_unseen, attribute_gzsl, data.unseenclasses)
+                    acc_GZSL_seen = test_gzsl(opt, model, testloader_seen, attribute_gzsl, data.seenclasses)
 
-                print('\n[Epoch {}] GZSL test accuracy is Unseen: {:.1f} Seen: {:.1f} H:{:.1f}'
-                      '\n           Best_H [Unseen: {:.1f}% Seen: {:.1f}% H: {:.1f}% | Epoch-{}]'.
-                      format(epoch+1, acc_GZSL_unseen, acc_GZSL_seen, acc_GZSL_H, result_gzsl.best_acc_U, result_gzsl.best_acc_S,
-                result_gzsl.best_acc, result_gzsl.best_iter))
+                    if (acc_GZSL_unseen + acc_GZSL_seen) == 0:
+                        acc_GZSL_H = 0
+                    else:
+                        acc_GZSL_H = 2 * acc_GZSL_unseen * acc_GZSL_seen / (
+                                acc_GZSL_unseen + acc_GZSL_seen)
+                    if acc_GZSL_H > result_gzsl.best_acc:
+                        # save model state
+                        model_save_path = os.path.join('./out/{}_GZSL_id_{}.pth'.format(opt.dataset, opt.train_id))
+                        torch.save(model.state_dict(), model_save_path)
+                        print('model saved to:', model_save_path)
+
+                    result_gzsl.update_gzsl(epoch+1, acc_GZSL_unseen, acc_GZSL_seen, acc_GZSL_H)
+
+                    print('\n[Epoch {}] GZSL test accuracy is Unseen: {:.1f} Seen: {:.1f} H:{:.1f}'
+                          '\n           Best_H [Unseen: {:.1f}% Seen: {:.1f}% H: {:.1f}% | Epoch-{}]'.
+                          format(epoch+1, acc_GZSL_unseen, acc_GZSL_seen, acc_GZSL_H, result_gzsl.best_acc_U, result_gzsl.best_acc_S,
+                    result_gzsl.best_acc, result_gzsl.best_iter))
+
+
 
 
 if __name__ == '__main__':

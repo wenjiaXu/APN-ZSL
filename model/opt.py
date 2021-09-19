@@ -29,7 +29,7 @@ def get_opt():
                         # resnet101_cub.pth.tar resnet101-5d3b4d8f.pth
                         help="path to pretrain resnet classifier")
 
-    parser.add_argument('--train_id', type=int, default=1001)
+    parser.add_argument('--train_id', type=int, default=0)
     parser.add_argument('--pretrained', default=None, help="path to pretrain classifier (to continue training)")
     # parser.add_argument('--checkpointroot', default=CC_HOME + '/ZSL_REG/checkpoint', help='path to checkpoint')
     parser.add_argument('--image_type', default='test_unseen_loc', type=str, metavar='PATH',
@@ -71,6 +71,9 @@ def get_opt():
     parser.add_argument('--awa_finetune', action='store_true', default=False)
     parser.add_argument('--use_group', action='store_true', default=False)
     parser.add_argument('--avg_pool', action='store_true', default=False)
+    # evaluation
+    parser.add_argument('--only_evaluate', action='store_true', default=False)
+    parser.add_argument('--resume', default=False)
 
     # opt for finetune ALE
     opt = parser.parse_args()
