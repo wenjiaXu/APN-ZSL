@@ -46,7 +46,7 @@ We provide the trained ZSL model for three datasets as below:
 
 To perform evaluation, please download the model and place them into direction *./out/* Then run ./script/{dataset}_ZSL_eval.sh. 
 
-***
+##
 
 If you use any content of this repo for your work, please cite the following bib entry:
 
