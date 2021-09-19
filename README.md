@@ -34,6 +34,20 @@ There are four parts in the code.
  - `pretrained_models`: The pretrained models.
  - `script`: The training scripts for APN, e.g., *./script/SUN_ZSL.sh*, etc. The training scripts for APN+ABP, i.e., *./script/SUN_APN_ABP.sh*, etc.
 
+## Model zoo
+
+We provide the trained ZSL model for three datasets as below:
+
+ Dataset          | ZSL Accuracy   |  Download link | 
+|----------------|---------------------- |-----------------|------|-------|----------------| 
+| CUB          | 72.1                 |[Download](https://drive.google.com/file/d/1hPWNtbprwgrFlZmsauOV0mP0RCvekabA/view?usp=sharing) |
+| AWA2          | 68.6                 |[Download](https://drive.google.com/file/d/1ROau8p_si1qYhr5_gxdaIr_olen-DQp9/view?usp=sharing) |
+| SUN          | 61.5                 |[Download](https://drive.google.com/file/d/1H-zB05WmfZytXDkdrptRLz-r--6Ta8dS/view?usp=sharing) |
+
+To perform evaluation, please download the model and place them into direction *./out/* Then run ./script/{dataset}_ZSL_eval.sh. 
+
+***
+
 If you use any content of this repo for your work, please cite the following bib entry:
 
     @inproceedings{xu2020attribute,
