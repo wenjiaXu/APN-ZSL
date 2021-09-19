@@ -44,7 +44,7 @@ We provide the trained ZSL model for three datasets as below:
 | AWA2          | 68.6                 |[Download](https://drive.google.com/file/d/1ROau8p_si1qYhr5_gxdaIr_olen-DQp9/view?usp=sharing) |
 | SUN          | 61.5                 |[Download](https://drive.google.com/file/d/1H-zB05WmfZytXDkdrptRLz-r--6Ta8dS/view?usp=sharing) |
 
-To perform evaluation, please download the model and place them into direction *./out/* Then run ./script/{dataset}_ZSL_eval.sh. 
+To perform evaluation, please download the model and place them into direction *./out/*， then run ./script/{dataset}_ZSL_eval.sh. 
 
 ##
 
