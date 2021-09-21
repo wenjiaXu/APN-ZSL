@@ -39,7 +39,7 @@ There are four parts in the code.
 We provide the trained ZSL model for three datasets as below:
 
  Dataset          | ZSL Accuracy   |  Download link | GZSL Accuracy |  Download link | 
- |  ----  | ----  | ----  |
+ |  ----  | ----  | ----  | ----  | ----  |
 | CUB          | 72.1                 |[Download](https://drive.google.com/file/d/1hPWNtbprwgrFlZmsauOV0mP0RCvekabA/view?usp=sharing) | 66.0 | [Download](https://drive.google.com/file/d/1F74oJPOyEXW3idQcAWnuXbLFPeUn09b4/view?usp=sharing)
 | AWA2          | 68.6                 |[Download](https://drive.google.com/file/d/1ROau8p_si1qYhr5_gxdaIr_olen-DQp9/view?usp=sharing) | 67.4| [Download](https://drive.google.com/file/d/1_B4HyfQRyGw2KSZ_CIv8mBnEFlK5NRm7/view?usp=sharing)
 | SUN          | 61.5                 |[Download](https://drive.google.com/file/d/1H-zB05WmfZytXDkdrptRLz-r--6Ta8dS/view?usp=sharing) |37.5| [Download](https://drive.google.com/file/d/1cRBv66A_YQUMqjexVOKF3_q3sgfLm62S/view?usp=sharing)
