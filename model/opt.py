@@ -53,7 +53,7 @@ def get_opt():
 
     # about calculating IoU
     parser.add_argument('--save_att', default=False, help='./visualize_IoU/00/')
-    parser.add_argument('--IoU_scale', type=int, default=4)  # The scale of IoU bounding box
+    parser.add_argument('--IoU_scale', type=int, default=1.4)  # The scale of IoU bounding box
     parser.add_argument('--IoU_thr', type=float, default=0.5)
     parser.add_argument('--resize_WH', action='store_true', default=False)
     parser.add_argument('--out_of_edge', action='store_true', default=False)
